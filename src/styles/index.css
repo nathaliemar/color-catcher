@@ -1,14 +1,11 @@
 /* Color Variables */
 :root {
-  /* Primary Colors */
-  --color-primary: #4caf50; /* Green */
-  --color-primary-light: #81c784;
-  --color-primary-dark: #388e3c;
-
-  /* Secondary Colors */
-  --color-secondary: #ff5722; /* Orange */
-  --color-secondary-light: #ff8a65;
-  --color-secondary-dark: #e64a19;
+  /* Main Colors */
+  --beige: #ffe3cc;
+  --pink: #ffc2b5;
+  --blue: #646c8f;
+  --brown: #8f797e;
+  --sand: #dcc3a1;
 
   /* Neutral Colors */
   --color-white: #ffffff;
@@ -17,17 +14,16 @@
   --color-gray: #9e9e9e;
   --color-gray-dark: #616161;
 
-  /* Semantic Colors */
-  --color-success: #4caf50;
-  --color-warning: #ffc107;
-  --color-error: #f44336;
-  --color-info: #2196f3;
+  /* Button Colors */
+  --color-button: #646c8f;
+  --color-button-text: #ffffff;
 }
 
 /* Typography Variables */
 :root {
   --font-family-sans: "Roboto", Arial, sans-serif;
   --font-family-serif: "Merriweather", Georgia, serif;
+  --font-winky: "Winky Rough", sans-serif;
 
   /* Font Sizes */
   --font-size-xs: 0.75rem; /* 12px */
@@ -82,8 +78,76 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: var(--font-winky);
 }
 
 body {
-  background-color: var(--color-primary-light);
+  background-color: var(--beige);
+  text-align: center;
+}
+#home-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+}
+#game-screen {
+  display: none;
+}
+#end-screen {
+  display: none;
+}
+.btn {
+  background-color: var(--color-button);
+  color: var(--color-button-text);
+  border: none;
+  width: 200px;
+  height: 80px;
+  border-radius: var(--border-radius-sm);
+  margin: var(--spacing-sm);
+  font-size: var(--font-size-xl);
+}
+
+/* Home Screen Elements*/
+#logo {
+  height: 30vh;
+}
+
+.instruction-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: var(----beige);
+  color: var(--brown);
+  border-radius: var(--border-radius-lg);
+  border-style: solid;
+  border-width: 10px;
+  border-color: var(--brown);
+  box-shadow: var(--shadow-lg);
+  max-width: 90vw;
+  padding: var(--spacing-md);
+}
+
+.instruction-container h2 {
+  margin: var(--spacing-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.instruction-container hr {
+  border: none;
+  border-top: 1px solid var(--sand);
+  margin: var(--spacing-sm) 0;
+}
+
+#item-explainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+#item-explainer .item-box {
+  width: 25%;
+  text-align: center;
 }
