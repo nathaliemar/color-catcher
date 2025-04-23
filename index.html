@@ -4,11 +4,61 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="src/styles/index.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Winky+Rough&display=swap"
+      rel="stylesheet"
+    />
     <title>Color Catcher</title>
     <link rel="icon" href="src/assets/palette-favicon.png" />
   </head>
   <body>
-    <h2>Hello World!!!</h2>
-    <script src="/src/scripts/index.js"></script>
+    <main>
+      <!--Home Screen-->
+      <div id="home-screen">
+        <img id="logo" src="src/assets/logo.png" alt="color cather logo" />
+        <div class="instruction-container" id="instructions">
+          <h2>How to play</h2>
+          <p>
+            Catch the falling colors and score points! Catch the color that's
+            needed to create the target color on the right! Watch out for
+            special elements, as they can either support your winning streak or
+            end the game!
+          </p>
+          <hr />
+          <h2>Objects you can catch:</h2>
+          <div id="item-explainer">
+            <div class="item-box">
+              🟡 Color<br />
+              Catching the right color will add points, catching the wrong one
+              will cost you a life!
+            </div>
+            <div class="item-box">
+              🌈 Rainbow<br />
+              Catching this will count as if you caught the right color.
+            </div>
+            <div class="item-box">
+              ♥️ Heart<br />
+              This will refill a life up to a max of 3.
+            </div>
+            <div class="item-box">
+              💣 Bomb<br />
+              Watch out! If you catch this, the game is over!
+            </div>
+          </div>
+        </div>
+
+        <br />
+        <button class="btn" id="start-button">Start Game</button>
+      </div>
+
+      <!--Game Screen-->
+      <div id="game-screen"></div>
+      <!--End Screen-->
+      <div id="end-screen">
+        <h2>Game over!</h2>
+        <button class="btn" id="restart-button">Try again!</button>
+      </div>
+    </main>
+    <script src="src/scripts/index.js"></script>
   </body>
 </html>
