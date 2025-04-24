@@ -94,6 +94,7 @@ body {
 }
 #game-screen {
   display: none;
+  align-content: center;
 }
 #end-screen {
   display: none;
@@ -150,4 +151,14 @@ body {
 #item-explainer .item-box {
   width: 25%;
   text-align: center;
+}
+/* GAME ELEMENTS*/
+
+#game-container {
+  background-color: var(--pink);
+  display: inline-block;
+  width: 1280px;
+  height: 720px; /* this can be removed once I added background image with right dimensions!*/
+  overflow: hidden;
+  position: relative; /*needed so overflow hidden works for child elements*/
 }

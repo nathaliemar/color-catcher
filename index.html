@@ -52,13 +52,24 @@
       </div>
 
       <!--Game Screen-->
-      <div id="game-screen"></div>
+      <div id="game-screen">
+        <div id="stats">
+          <div>
+            <h2>Stats</h2>
+            <p>Score: <span id="score">0</span></p>
+            <p>Lives: <span id="lives">3</span></p>
+          </div>
+        </div>
+        <div id="game-container"></div>
+      </div>
+
       <!--End Screen-->
       <div id="end-screen">
         <h2>Game over!</h2>
         <button class="btn" id="restart-button">Try again!</button>
       </div>
     </main>
+    <script src="src/scripts/classes.js"></script>
     <script src="src/scripts/index.js"></script>
   </body>
 </html>

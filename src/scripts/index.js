@@ -1,45 +1,48 @@
-class Game {
-  constructor() {
-    this.homeScreen = document.getElementById("home-screen");
-    this.gameScreen = document.getElementById("game-screen");
-    this.endScreen = document.getElementById("end-screen");
-    //TODO: Add player class item
-    this.player = null;
-    //TBD
-    this.height = 720;
-    this.width = 1280;
-    //TBD
-    this.fallingObjects = [];
-    this.score = 0;
-    this.lives = 3;
-    this.isGameOver = false;
-    //TODO: Check if necessary for falling objects
-    this.gameIntervalId;
-    this.gameLoopFrequency = Math.round(1000 / 60);
+window.onload = function () {
+  FallingObject.loadImages();
+  //#### BUTTONS & EVENT LISTENERS####
+  console.log(Game);
+  //START
+  //TODO: Update startGame / check if both work
+  const startButton = document.getElementById("start-button");
+  startButton.addEventListener("click", startGame);
+  function startGame() {
+    console.log("Function startGame called");
+    game = new Game(); //let game line 1
+    game.start();
   }
-  //METHODS
-  //Start game, enable gameScreen
-  start() {}
-  //Move player, generate fallingObjects
-  update() {}
-  //Remove player, remove fallingObjects, set Game over, show end screen
-  endGame() {}
-}
 
-class Player {
-  constructor() {}
-  // Move player left to right
-  move() {}
-  // Updating DOM with recent position
-  updatePosition() {}
-  // Check if user collided w/ fallingObject
-  didCatch() {}
-  // evaluate favorable collusion or not
-  getCatchType() {}
-}
-
-class fallingObject {
-  constructor() {
-    this.objectType; //color, bomb, heart, rainbow
+  //RESTART
+  const restartButton = document.getElementById("restart-button");
+  restartButton.addEventListener("click", restartGame);
+  function restartGame() {
+    window.location.reload();
   }
-}
+
+  //MOVING THE PLAYER
+  function handleKeydown(event) {
+    const key = event.key;
+    const possibleKeyStrokes = ["ArrowLeft", "ArrowRight"];
+    if (possibleKeyStrokes.includes(key)) {
+      event.preventDefault();
+      if (key === "ArrowLeft") {
+        game.player.directionX = -5;
+      }
+      if (key === "ArrowRight") {
+        game.player.directionX = 5;
+      }
+    }
+  }
+  function handleKeyup(event) {
+    const key = event.key;
+    const possibleKeyStrokes = ["ArrowLeft", "ArrowRight"];
+    if (possibleKeyStrokes.includes(key)) {
+      event.preventDefault();
+      if (key === "ArrowLeft" || key === "ArrowRight") {
+        game.player.directionX = 0;
+      }
+    }
+  }
+  window.addEventListener("keydown", handleKeydown);
+  window.addEventListener("keyup", handleKeyup);
+};
