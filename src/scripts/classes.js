@@ -1,123 +1,5 @@
-//COLOR MIXING LOGIC - basis for evaluating if a catch is favorable
-const orangComponents = ["red", "yellow"];
-const purpleComponents = ["red", "blue"];
-const greenComponents = ["blue", "yellow"];
-
-class Game {
-  constructor() {
-    this.homeScreen = document.getElementById("home-screen");
-    this.gameScreen = document.getElementById("game-screen");
-    this.gameContainer = document.getElementById("game-container"); //remove if not needed
-    this.endScreen = document.getElementById("end-screen");
-    //TODO: Add player class item, then create new player here!
-    this.player = new Player(
-      this.gameContainer,
-      615, //TODO: CLARIFY: entering 1280/2-25 = 615 does not work for some reason
-      580,
-      50,
-      200,
-      "src/assets/brush-small.png"
-    );
-    //TBD
-    this.height = 720;
-    this.width = 1280;
-    //TBD
-    this.fallingObjects = [];
-    this.score = 0;
-    this.lives = 3;
-    this.isGameOver = false;
-    //TODO: Check if necessary for falling objects
-    this.gameIntervalId;
-    this.gameLoopFrequency = Math.round(1000 / 60);
-    //TODO: Logic to generate the "target color"
-    this.targetColor; //Color to be mixed
-    this.currentColor; //Color assigned to user
-  }
-  //METHODS
-  //When game is started, after collision with correct color or rainbow
-  generateTargetColor() {}
-  //When game is started, after collision with correct color
-  generatePlayerColor() {}
-  //Start game, enable gameScreen
-  start() {
-    this.gameContainer.style.height = `${this.height}`; //pass size to DOM
-    this.gameContainer.style.width = `${this.width}`;
-    this.homeScreen.style.display = "none";
-    this.gameScreen.style.display = "block";
-    this.gameIntervalId = setInterval(() => {
-      this.gameLoop();
-    }, this.gameLoopFrequency);
-  }
-
-  //run updates in gameLoopFrequency
-  gameLoop() {
-    this.update();
-    console.log("gameloop Fired");
-    if (this.isGameOver) {
-      clearInterval(this.gameIntervalId);
-    }
-  }
-  //Move player, generate fallingObjects
-  update() {
-    this.player.move();
-    // Create a new obstacle based on a random probability
-    // when there is no other obstacles on the screen
-    if (Math.random() > 0.98 && this.fallingObjects.length < 1) {
-      //Math random: Ensure not to add fallingObject immediately
-      this.fallingObjects.push(new FallingObject(this.gameContainer));
-    }
-    //add an obstacle if there is none
-    if (this.fallingObjects.length) {
-      const [fallingObject] = this.fallingObjects;
-      fallingObject.move();
-
-      //## HANDLING COLLISIONS - TODO: OUTSOURCE TO HELPER FUNCTIONS; FINE TUNE LOGIC
-      if (this.player.didCollide(fallingObject)) {
-        this.lives--;
-        //Update DOM
-        const lives = document.getElementById("lives");
-        lives.textContent = this.lives;
-        //remove fallingObject
-        fallingObject.element.remove();
-        this.fallingObjects = [];
-        //handle 0 lives
-        if (this.lives === 0) {
-          this.endGame();
-        }
-        //BASIC COLLISION LOGIC
-        //BASIC 01: If you catch any, add points!
-
-        //BASIC 02: If you miss any, remove life!
-
-        //If color (rgb)if right: increase score, if wrong: reduce lives
-        //if rainbow
-        //if heart. check if lives <3, then lives +1, (else: Toaster: your lives are already full)
-        //If bomb - game over
-        //this.Game.endGame();
-      }
-      //## HANDLING MISSED FALLING OBJECTS
-      if (fallingObject.top > this.height) {
-        this.score++;
-        //Update score in DOM
-        const score = document.getElementById("score");
-        score.textContent = this.score;
-        //remove obstacle
-        fallingObject.element.remove();
-        this.fallingObjects = [];
-      }
-    }
-  }
-  //Remove player, remove fallingObjects, set Game over, show end screen
-  endGame() {
-    this.player.element.remove();
-    this.fallingObjects.forEach((object) => object.element.remove());
-    this.isGameOver = true;
-    this.gameScreen.style.display = "none";
-    this.endScreen.style.display = "block"; //TODO check if needs to be flex
-  }
-}
-
-class Player {
+import { generateRandomArrIndex } from "./handlers.js";
+export class Player {
   constructor(gameContainer, left, top, width, height, imgSrc) {
     this.gameContainer = gameContainer;
     this.left = left;
@@ -153,7 +35,7 @@ class Player {
     this.updatePosition();
   }
   // Updating DOM with recent position
-  //TODO: Check if top is needed
+  //TODO: Check if top is needed; Make private
   updatePosition() {
     this.element.style.left = `${this.left}px`;
     this.element.style.top = `${this.top}px`;
@@ -185,7 +67,7 @@ class Player {
     // TODO Add Conditions for colors, check syntax (FallingObject)
   }
 }
-class FallingObject {
+export class FallingObject {
   //fallingSpeed / method updateSpeed()
   static imageMap = {
     red: new Image(),
@@ -196,24 +78,39 @@ class FallingObject {
     bomb: new Image(),
   };
   static loadImages() {
-    this.imageMap.red.src = "src/assets/logo.png"; //TODO
-    this.imageMap.blue.src = "src/assets/logo.png"; //TODO
-    this.imageMap.yellow.src = "src/assets/logo.png"; //TODO
+    this.imageMap.red.src = "src/assets/red-object.png"; //TODO
+    this.imageMap.blue.src = "src/assets/blue-object.png"; //TODO
+    this.imageMap.yellow.src = "src/assets/yellow-object.png"; //TODO
     this.imageMap.rainbow.src = "src/assets/logo.png"; //TODO
-    this.imageMap.heart.src = "src/assets/logo.png"; //TODO
-    this.imageMap.bomb.src = "src/assets/logo.png"; //TODO
+    this.imageMap.heart.src = "src/assets/heart-object.png";
+    this.imageMap.bomb.src = "src/assets/bomb-object.png"; //TODO
   }
 
-  constructor(gameContainer) {
+  constructor(gameContainer, hardMode) {
     this.gameContainer = gameContainer;
-    this.type = "red"; //red, yellow, blue, bomb, heart, rainbow //TODO!
-    this.left = Math.floor(Math.random() * 300 + 70); //TODO: Finetune position
-    this.top = 0; //TODO: Finetune after inserting backgroundImage
+    this.hardMode = hardMode;
+    this.possibleObjectTypes = {
+      colors: ["red", "blue", "yellow"],
+      bonuses: ["rainbow", "heart"],
+      traps: "bomb",
+    };
+    this.type;
+    this.left = Math.floor(Math.random() * 1260 + 20); //TODO: Finetune position
+    this.top = 20; //TODO: Finetune after inserting backgroundImage
     this.size = 100; //width & height in one
-    this.speed;
+    this.speed = 5;
+    this.onGameStart();
+  }
+
+  onGameStart() {
+    this.assignType();
+    this.initiaiteItem();
+    this.defineSpeed();
+  }
+
+  initiaiteItem() {
     this.element = document.createElement("img");
     this.element.src = FallingObject.imageMap[this.type].src;
-
     this.element.style.position = "absolute";
     this.element.style.width = `${this.size}px`;
     this.element.style.height = `${this.size}px`;
@@ -221,17 +118,56 @@ class FallingObject {
     this.element.style.top = `${this.top}px`;
     this.gameContainer.appendChild(this.element);
   }
+
   move() {
     console.log("Falling object move fired");
-    this.top += 3; //TODO: Make variable
+    this.top += this.speed; //TODO: Make variable
     this.updatePosition();
   }
+
+  //TODO Make private
   updatePosition() {
     this.element.style.left = `${this.left}px`;
     this.element.style.top = `${this.top}px`;
   }
-  updateSpeed() {
-    //this.speed++ -> make sure this applies to all following!
+
+  //Set different types falling object depending on probabilities //TODO: CALL EVERY TIME NEW ONE IS GENERATED
+  assignType() {
+    const bonusProbability = 10;
+    const trapProbability = 5;
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+
+    if (randomNumber < trapProbability) {
+      this.assignElement("traps");
+    } else if (randomNumber < bonusProbability) {
+      this.assignElement("bonuses");
+    } else this.assignElement("colors");
   }
-  //determine what consequences the different collisions have
+  //   //assigns the fallingObject one of the primary colors
+  //   assignColor() {
+  //     const colors = this.possibleObjectTypes.colors;
+  //     const index = generateRandomArrIndex(colors);
+  //     this.type = colors[index];
+  //   }
+  //   //assigns the fallingObject to be a rainbow or heart
+  //   assignBonus() {
+  //     const bonuses = this.possibleObjectTypes.bonuses;
+  //     const index = generateRandomArrIndex(bonuses);
+  //     this.type = bonuses[index];
+  //   }
+
+  assignElement(type) {
+    if (type === "traps") return (this.type = this.possibleObjectTypes.traps);
+    const toAssign = this.possibleObjectTypes[type];
+    const index = generateRandomArrIndex(toAssign);
+    this.type = toAssign[index];
+  }
+
+  //   assignTrap() {
+  //     this.type = this.possibleObjectTypes.traps;
+  //   }
+
+  defineSpeed() {
+    this.hardMode ? (this.speed = 7) : (this.speed = 5);
+  }
 }
