@@ -1,4 +1,8 @@
+import { FallingObject } from "./classes.js";
+import { Game } from "./game.js";
+
 window.onload = function () {
+  let game;
   FallingObject.loadImages();
   //#### BUTTONS & EVENT LISTENERS####
   console.log(Game);

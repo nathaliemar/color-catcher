@@ -53,14 +53,18 @@
 
       <!--Game Screen-->
       <div id="game-screen">
-        <div id="stats">
-          <div>
-            <h2>Stats</h2>
-            <p>Score: <span id="score">0</span></p>
-            <p>Lives: <span id="lives">3</span></p>
+        <div id="game-container">
+          <div id="stats">
+            <div>
+              <h2>Stats</h2>
+              <p>Score: <span id="score">0</span></p>
+              <p>Lives: <span id="lives">3</span></p>
+              <p>Difficulty: <span id="difficulty">Easy</span></p>
+              <p>Your color:<span id="current-color">none</span></p>
+              <p>Mix this color:<span id="target-color">none</span></p>
+            </div>
           </div>
         </div>
-        <div id="game-container"></div>
       </div>
 
       <!--End Screen-->
@@ -69,7 +73,6 @@
         <button class="btn" id="restart-button">Try again!</button>
       </div>
     </main>
-    <script src="src/scripts/classes.js"></script>
-    <script src="src/scripts/index.js"></script>
+    <script type="module" src="src/scripts/index.js"></script>
   </body>
 </html>

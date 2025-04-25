@@ -155,10 +155,15 @@ body {
 /* GAME ELEMENTS*/
 
 #game-container {
+  margin-top: 50px;
   background-color: var(--pink);
   display: inline-block;
   width: 1280px;
   height: 720px; /* this can be removed once I added background image with right dimensions!*/
   overflow: hidden;
   position: relative; /*needed so overflow hidden works for child elements*/
+}
+#stats {
+  display: flex;
+  flex-direction: row;
 }
