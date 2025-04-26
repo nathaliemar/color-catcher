@@ -1,4 +1,4 @@
-import { FallingObject } from "./classes.js";
+import { FallingObject } from "./falling-object.js";
 import { Game } from "./game.js";
 
 window.onload = function () {
