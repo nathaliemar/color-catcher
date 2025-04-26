@@ -1,4 +1,5 @@
-import { FallingObject, Player } from "./classes.js";
+import { FallingObject } from "./falling-object.js";
+import { Player } from "./player.js";
 
 export class Game {
   constructor() {
@@ -9,12 +10,11 @@ export class Game {
     };
     this.homeScreen = document.getElementById("home-screen");
     this.gameScreen = document.getElementById("game-screen");
-    this.gameContainer = document.getElementById("game-container"); //remove if not needed
+    this.gameContainer = document.getElementById("game-container");
     this.endScreen = document.getElementById("end-screen");
-    //TODO: Add player class item, then create new player here!
     this.player = new Player(
       this.gameContainer,
-      615, //TODO: CLARIFY: entering 1280/2-25 = 615 does not work for some reason
+      500,
       580,
       50,
       200,
@@ -31,20 +31,17 @@ export class Game {
     this.isGameOver = false;
     this.gameIntervalId;
     this.gameLoopFrequency = Math.round(1000 / 60);
-    //TODO: Logic to generate the "target color"
+
     this.targetColor; //Color to be mixed
     this.currentColor; //Color assigned to user
     this.matchingColor; // falling color the user should catch
   }
-  //METHODS
-  //When game is started, after collision with correct color or rainbow
   generateTargetColor() {
     const mixedColors = Object.keys(this.colors);
     this.targetColor =
       mixedColors[Math.floor(Math.random() * mixedColors.length)];
   }
 
-  //When game is started, after collision with correct color
   generatePlayerColor() {
     if (!this.targetColor) throw new Error("Target color not set");
     const possibleColors = [...this.colors[this.targetColor]];
@@ -58,9 +55,21 @@ export class Game {
   //TODO: Transform to images
   updateDisplayedColors() {
     const displayTargetColor = document.getElementById("target-color");
+    const displayTargetColorContainer = document.getElementById(
+      "target-color-container"
+    );
     const displayCurrentColor = document.getElementById("current-color");
+    const displayCurrentColorContainer = document.getElementById(
+      "current-color-container"
+    );
+    //Update Text
     displayTargetColor.textContent = this.targetColor; //update class to have color & add styling to bring this live
+    displayTargetColor.style.color = `var(--${this.targetColor})`;
     displayCurrentColor.textContent = this.currentColor;
+    displayCurrentColor.style.color = `var(--${this.currentColor})`;
+    //Update color boxes
+    displayTargetColorContainer.style.backgroundColor = `var(--${this.targetColor})`;
+    displayCurrentColorContainer.style.backgroundColor = `var(--${this.currentColor})`;
   }
 
   onInitialRender() {
@@ -84,7 +93,6 @@ export class Game {
   //run updates in gameLoopFrequency
   gameLoop() {
     this.update();
-    console.log("gameloop Fired");
     if (this.isGameOver) {
       clearInterval(this.gameIntervalId);
     }
@@ -100,6 +108,7 @@ export class Game {
   //Move player, generate fallingObjects
   update() {
     this.player.move();
+    this.updateDifficulty();
     // Create a new obstacle based on a random probability
     // when there is no other obstacles on the screen
     if (Math.random() > 0.95 && this.fallingObjects.length < 1) {
@@ -120,19 +129,6 @@ export class Game {
 
       //## HANDLING COLLISIONS - TODO: OUTSOURCE TO HELPER FUNCTIONS; FINE TUNE LOGIC
       if (this.player.didCollide(fallingObject)) {
-        //ORIGINAL LOGIC
-        // this.lives--;
-        // //Update DOM
-        // //const lives2 = document.getElementById("lives");
-        // lives.textContent = this.lives;
-        // //remove fallingObject
-        // fallingObject.element.remove();
-        // this.fallingObjects = [];
-        // // //handle 0 lives
-        // if (this.lives === 0) {
-        //   this.endGame();
-        // }
-
         //UPDATED COLLISION LOGIC:
         if (
           fallingObject.type === this.matchingColor ||
@@ -189,9 +185,12 @@ export class Game {
     this.gameScreen.style.display = "none";
     this.endScreen.style.display = "block"; //TODO check if needs to be flex
   }
+
   updateDifficulty() {
     const displayedDifficulty = document.getElementById("difficulty");
-    this.hardMode ? (displayedDifficulty.textContent = "Hard mode") : "Easy";
+    this.hardMode
+      ? (displayedDifficulty.textContent = "Hard mode")
+      : (displayedDifficulty.textContent = "Easy");
   }
 }
 // localStorage.setItem("my-value", "value");

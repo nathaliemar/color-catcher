@@ -1,72 +1,5 @@
 import { generateRandomArrIndex } from "./handlers.js";
-export class Player {
-  constructor(gameContainer, left, top, width, height, imgSrc) {
-    this.gameContainer = gameContainer;
-    this.left = left;
-    this.top = top;
-    this.width = width;
-    this.height = height;
-    this.directionX = 0;
-    //this.directionY=0 <- not needed I guess
-    this.element = document.createElement("img");
-    //Add player to DOM
-    this.element.src = imgSrc;
-    this.element.style.position = "absolute";
-    this.element.style.width = `${width}px`;
-    this.element.style.height = `${height}px`;
-    this.element.style.left = `${left}px`;
-    this.element.style.top = `${top}px`;
-    this.gameContainer.appendChild(this.element);
-  }
-  // Move player left to right
-  move() {
-    console.log("move called");
-    console.log(this.directionX);
-    this.left += this.directionX; // only navigating left to right
-    //TODO: Check if "10" is actually matching the game's borders + Check if right works (naming)
-    //Left side
-    if (this.left < 10) {
-      this.left = 10;
-    }
-    //Right side
-    if (this.left > this.gameContainer.offsetWidth - this.width - 10) {
-      this.left = this.gameContainer.offsetWidth - this.width - 10;
-    }
-    this.updatePosition();
-  }
-  // Updating DOM with recent position
-  //TODO: Check if top is needed; Make private
-  updatePosition() {
-    this.element.style.left = `${this.left}px`;
-    this.element.style.top = `${this.top}px`;
-  }
-  // Check if user collided w/ fallingObject
-  didCollide(fallingObject) {
-    const playerRect = this.element.getBoundingClientRect();
-    const fallingObjectRect = fallingObject.element.getBoundingClientRect();
 
-    if (
-      playerRect.left < fallingObjectRect.right &&
-      playerRect.right > fallingObjectRect.left &&
-      playerRect.top < fallingObjectRect.bottom &&
-      playerRect.bottom > fallingObjectRect.top
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  // evaluate favorable collusion or not
-  getCollisionType() {
-    if (fallingObject.type === "rainbow") {
-    }
-    if (fallingObject.type === "bomb") {
-    }
-    if (fallingObject.type === "heart") {
-    }
-    // TODO Add Conditions for colors, check syntax (FallingObject)
-  }
-}
 export class FallingObject {
   //fallingSpeed / method updateSpeed()
   static imageMap = {
@@ -95,7 +28,7 @@ export class FallingObject {
       traps: "bomb",
     };
     this.type;
-    this.left = Math.floor(Math.random() * 1260 + 20); //TODO: Finetune position
+    this.left = Math.floor(Math.random() * 980 + 10); //TODO: Finetune position
     this.top = 20; //TODO: Finetune after inserting backgroundImage
     this.size = 100; //width & height in one
     this.speed = 5;
@@ -120,8 +53,7 @@ export class FallingObject {
   }
 
   move() {
-    console.log("Falling object move fired");
-    this.top += this.speed; //TODO: Make variable
+    this.top += this.speed;
     this.updatePosition();
   }
 
