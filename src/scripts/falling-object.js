@@ -11,12 +11,12 @@ export class FallingObject {
     bomb: new Image(),
   };
   static loadImages() {
-    this.imageMap.red.src = "src/assets/red-object.png"; //TODO
-    this.imageMap.blue.src = "src/assets/blue-object.png"; //TODO
-    this.imageMap.yellow.src = "src/assets/yellow-object.png"; //TODO
-    this.imageMap.rainbow.src = "src/assets/logo.png"; //TODO
+    this.imageMap.red.src = "src/assets/red-object.png";
+    this.imageMap.blue.src = "src/assets/blue-object.png";
+    this.imageMap.yellow.src = "src/assets/yellow-object.png";
+    this.imageMap.rainbow.src = "src/assets/rainbow-object.png";
     this.imageMap.heart.src = "src/assets/heart-object.png";
-    this.imageMap.bomb.src = "src/assets/bomb-object.png"; //TODO
+    this.imageMap.bomb.src = "src/assets/bomb-object.png";
   }
 
   constructor(gameContainer, hardMode) {

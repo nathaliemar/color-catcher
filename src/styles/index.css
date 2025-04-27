@@ -1,6 +1,6 @@
 /* Color Variables */
 :root {
-  /* Main Colors */
+  /* Theme Colors */
   --beige: #ffe3cc;
   --pink: #ffc2b5;
   --brown: #8f797e;
@@ -67,13 +67,6 @@
   --shadow-sm: 0px 1px 3px rgba(0, 0, 0, 0.12);
   --shadow-md: 0px 3px 6px rgba(0, 0, 0, 0.16);
   --shadow-lg: 0px 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* Z-Index */
-:root {
-  --z-index-dropdown: 1000;
-  --z-index-modal: 1050;
-  --z-index-tooltip: 1100;
 }
 
 * {
@@ -157,6 +150,7 @@ body {
 /* GAME ELEMENTS*/
 
 #game-container {
+  color: var(--brown);
   margin-top: 50px;
   margin-bottom: 50px;
   background-image: url("../assets/clouds-background.png");
@@ -166,6 +160,7 @@ body {
   overflow: hidden;
   position: relative; /*needed so overflow hidden works for child elements*/
 }
+
 #stats {
   display: flex;
   flex-direction: column;
@@ -177,33 +172,40 @@ body {
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-sm);
 }
+
 #logo-container {
+  width: 100px;
+  height: 100px;
   display: flex;
   background-image: url("../assets/logo-small.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  width: 100px;
-  height: 100px;
 }
 
 #current-color-container {
   width: 100px;
   height: 100px;
   background-color: var(--beige);
-  margin: var(--spacing-sm) 0; /* Add vertical spacing */
+  margin: var(--spacing-sm) 0;
 }
 
 #question-mark-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100px;
   height: 100px;
   background-color: var(--beige);
-  margin: var(--spacing-sm) 0; /* Add vertical spacing */
+  margin: var(--spacing-sm) 0;
+  font-size: x-large;
 }
 
 #target-color-container {
   width: 100px;
   height: 100px;
   background-color: var(--beige);
-  margin: var(--spacing-sm) 0; /* Add vertical spacing */
+  margin: var(--spacing-sm) 0;
 }
+
+/* END SCREEN ELEMENTS*/
