@@ -5,9 +5,7 @@ window.onload = function () {
   let game;
   FallingObject.loadImages();
   //#### BUTTONS & EVENT LISTENERS####
-  console.log(Game);
   //START
-  //TODO: Update startGame / check if both work
   const startButton = document.getElementById("start-button");
   startButton.addEventListener("click", startGame);
   function startGame() {

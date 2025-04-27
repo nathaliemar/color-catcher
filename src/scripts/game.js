@@ -20,10 +20,8 @@ export class Game {
       200,
       "src/assets/brush-small.png"
     );
-    //TBD
     this.height = 720;
     this.width = 1280;
-    //TBD
     this.fallingObjects = [];
     this.score = 0;
     this.lives = 3;
@@ -62,8 +60,8 @@ export class Game {
     const displayCurrentColorContainer = document.getElementById(
       "current-color-container"
     );
-    //Update Text
-    displayTargetColor.textContent = this.targetColor; //update class to have color & add styling to bring this live
+    //Update Text contents
+    displayTargetColor.textContent = this.targetColor;
     displayTargetColor.style.color = `var(--${this.targetColor})`;
     displayCurrentColor.textContent = this.currentColor;
     displayCurrentColor.style.color = `var(--${this.currentColor})`;
@@ -90,7 +88,6 @@ export class Game {
     }, this.gameLoopFrequency);
   }
 
-  //run updates in gameLoopFrequency
   gameLoop() {
     this.update();
     if (this.isGameOver) {
@@ -109,11 +106,10 @@ export class Game {
   update() {
     this.player.move();
     this.updateDifficulty();
-    // Create a new obstacle based on a random probability
-    // when there is no other obstacles on the screen
+    this.updateDifficultyInDom();
+
     if (Math.random() > 0.95 && this.fallingObjects.length < 1) {
-      //Math random: Ensure not to add fallingObject immediately
-      this.fallingObjects.push(this.generateFallingObject()); //Refactored, original argument see line 97 after =
+      this.fallingObjects.push(this.generateFallingObject());
     }
     //add an obstacle if there is none
     if (this.fallingObjects.length) {
@@ -121,60 +117,9 @@ export class Game {
       const lives = document.getElementById("lives");
       const score = document.getElementById("score");
 
-      console.log(fallingObject);
       fallingObject.move();
-      if (this.score > 50) {
-        this.hardMode = true;
-      }
-
-      //## HANDLING COLLISIONS - TODO: OUTSOURCE TO HELPER FUNCTIONS; FINE TUNE LOGIC
-      if (this.player.didCollide(fallingObject)) {
-        //UPDATED COLLISION LOGIC:
-        if (
-          fallingObject.type === this.matchingColor ||
-          fallingObject.type === "rainbow"
-        ) {
-          this.score += 10;
-          score.textContent = this.score;
-          this.onInitialRender(); //Generate new set of colors
-        } else if (fallingObject.type === "heart") {
-          if (this.lives < 3) {
-            this.lives++;
-            lives.textContent = this.lives;
-          }
-        } else if (fallingObject.type === "bomb") {
-          this.endGame();
-        } else {
-          this.lives--;
-          lives.textContent = this.lives;
-        }
-        //REMOVE ELEMENT AFTER COLLISION
-        fallingObject.element.remove();
-        this.fallingObjects = [];
-        //END GAME IF NEEDED
-        if (this.lives === 0) {
-          this.endGame();
-        }
-      }
-      //## HANDLING MISSED FALLING OBJECTS
-      if (fallingObject.top > this.height) {
-        //BONUS POINTS IF A BOMB WAS MISSED
-        if (fallingObject.type === "bomb") {
-          this.score += 10;
-          score.textContent = this.score;
-        }
-        if (fallingObject.type === this.matchingColor) {
-          this.lives--;
-          lives.textContent = this.lives;
-        }
-        //remove obstacle
-        fallingObject.element.remove();
-        this.fallingObjects = [];
-        //End game if needed
-        if (this.lives === 0) {
-          this.endGame();
-        }
-      }
+      this.handleCollision(fallingObject, lives, score);
+      this.handleMissedElement(fallingObject, lives, score);
     }
   }
   //Remove player, remove fallingObjects, set Game over, show end screen
@@ -185,12 +130,70 @@ export class Game {
     this.gameScreen.style.display = "none";
     this.endScreen.style.display = "block"; //TODO check if needs to be flex
   }
-
   updateDifficulty() {
+    if (this.score > 50) {
+      this.hardMode = true;
+    }
+  }
+
+  updateDifficultyInDom() {
     const displayedDifficulty = document.getElementById("difficulty");
     this.hardMode
-      ? (displayedDifficulty.textContent = "Hard mode")
+      ? (displayedDifficulty.textContent = "Hard")
       : (displayedDifficulty.textContent = "Easy");
+  }
+  handleCollision(fallingObject, lives, score) {
+    //## HANDLING COLLISIONS - TODO: OUTSOURCE TO HELPER FUNCTIONS; FINE TUNE LOGIC
+    if (this.player.didCollide(fallingObject)) {
+      //UPDATED COLLISION LOGIC:
+      if (
+        fallingObject.type === this.matchingColor ||
+        fallingObject.type === "rainbow"
+      ) {
+        this.score += 10;
+        score.textContent = this.score;
+        this.onInitialRender(); //Generate new set of colors
+      } else if (fallingObject.type === "heart") {
+        if (this.lives < 3) {
+          this.lives++;
+          lives.textContent = this.lives;
+        }
+      } else if (fallingObject.type === "bomb") {
+        this.endGame();
+      } else {
+        this.lives--;
+        lives.textContent = this.lives;
+      }
+      //REMOVE ELEMENT AFTER COLLISION
+      fallingObject.element.remove();
+      this.fallingObjects = [];
+      //END GAME IF NEEDED
+      if (this.lives === 0) {
+        this.endGame();
+      }
+    }
+  }
+
+  handleMissedElement(fallingObject, lives, score) {
+    //## HANDLING MISSED FALLING OBJECTS
+    if (fallingObject.top > this.height) {
+      //BONUS POINTS IF A BOMB WAS MISSED
+      if (fallingObject.type === "bomb") {
+        this.score += 10;
+        score.textContent = this.score;
+      }
+      if (fallingObject.type === this.matchingColor) {
+        this.lives--;
+        lives.textContent = this.lives;
+      }
+      //remove obstacle
+      fallingObject.element.remove();
+      this.fallingObjects = [];
+      //End game if needed
+      if (this.lives === 0) {
+        this.endGame();
+      }
+    }
   }
 }
 // localStorage.setItem("my-value", "value");
