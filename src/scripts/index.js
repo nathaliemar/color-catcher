@@ -5,12 +5,12 @@ window.onload = function () {
   let game;
   FallingObject.loadImages();
   //#### BUTTONS & EVENT LISTENERS####
+
   //START
   const startButton = document.getElementById("start-button");
   startButton.addEventListener("click", startGame);
   function startGame() {
-    console.log("Function startGame called");
-    game = new Game(); //let game line 1
+    game = new Game();
     game.start();
   }
 

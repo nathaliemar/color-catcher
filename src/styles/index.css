@@ -80,20 +80,28 @@ body {
   background-color: var(--beige);
   text-align: center;
 }
+
 #home-screen {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   height: 100vh;
 }
+
 #game-screen {
   display: none;
   align-content: center;
 }
+
 #end-screen {
   display: none;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
+
 .btn {
   background-color: var(--color-button);
   color: var(--color-button-text);
@@ -105,8 +113,12 @@ body {
   font-size: var(--font-size-xl);
 }
 
-/* Home Screen Elements*/
-#logo {
+p:not(#game-screen p) {
+  font-size: var(--font-size-lg);
+}
+
+/* HOME SCREEN ELEMENTS*/
+.logo {
   height: 30vh;
 }
 
@@ -209,3 +221,11 @@ body {
 }
 
 /* END SCREEN ELEMENTS*/
+#end-screen h2 {
+  margin-bottom: var(--spacing-lg);
+}
+
+#end-screen h2,
+#end-screen p {
+  color: var(--brown);
+}

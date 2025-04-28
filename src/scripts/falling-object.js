@@ -28,20 +28,20 @@ export class FallingObject {
       traps: "bomb",
     };
     this.type;
-    this.left = Math.floor(Math.random() * 980 + 10); //TODO: Finetune position
-    this.top = 20; //TODO: Finetune after inserting backgroundImage
-    this.size = 100; //width & height in one
+    this.left = Math.floor(Math.random() * 980 + 10);
+    this.top = 20;
+    this.size = 100;
     this.speed = 5;
     this.onGameStart();
   }
 
   onGameStart() {
     this.assignType();
-    this.initiaiteItem();
+    this.initiateItem();
     this.defineSpeed();
   }
 
-  initiaiteItem() {
+  initiateItem() {
     this.element = document.createElement("img");
     this.element.src = FallingObject.imageMap[this.type].src;
     this.element.style.position = "absolute";
