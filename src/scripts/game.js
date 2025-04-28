@@ -32,7 +32,7 @@ export class Game {
 
     this.targetColor; //Color to be mixed
     this.currentColor; //Color assigned to user
-    this.matchingColor; // falling color the user should catch
+    this.matchingColor; // Falling color the user should catch
   }
   generateTargetColor() {
     const mixedColors = Object.keys(this.colors);
@@ -49,8 +49,6 @@ export class Game {
     this.currentColor = colorA;
     this.matchingColor = colorB;
   }
-  //UPDATE DOM TO SHOW PLAYER WHAT THEY SHOULD CATCH
-  //TODO: Transform to images
   updateDisplayedColors() {
     const displayTargetColor = document.getElementById("target-color");
     const displayTargetColorContainer = document.getElementById(
@@ -60,7 +58,7 @@ export class Game {
     const displayCurrentColorContainer = document.getElementById(
       "current-color-container"
     );
-    //Update Text contents
+    //Update color names as text
     displayTargetColor.textContent = this.targetColor;
     displayTargetColor.style.color = `var(--${this.targetColor})`;
     displayCurrentColor.textContent = this.currentColor;
@@ -70,16 +68,15 @@ export class Game {
     displayCurrentColorContainer.style.backgroundColor = `var(--${this.currentColor})`;
   }
 
-  onInitialRender() {
+  generateAllColors() {
     this.generateTargetColor();
     this.generatePlayerColor();
     this.updateDisplayedColors();
   }
 
-  //Start game, enable gameScreen
   start() {
-    this.onInitialRender();
-    this.gameContainer.style.height = `${this.height}`; //pass size to DOM
+    this.generateAllColors();
+    this.gameContainer.style.height = `${this.height}`;
     this.gameContainer.style.width = `${this.width}`;
     this.homeScreen.style.display = "none";
     this.gameScreen.style.display = "block";
@@ -95,25 +92,17 @@ export class Game {
     }
   }
 
-  // MOVE GENERATION OF NEW FALLING OBJECT INTO SEPARATE FCT
-  generateFallingObject() {
-    const object = new FallingObject(this.gameContainer, this.hardMode);
-    console.log(object.type);
-    return object;
-  }
-
   //Move player, generate fallingObjects
   update() {
     this.player.move();
     this.updateDifficulty();
-    this.updateDifficultyInDom();
-
+    //if there is no falling object, add one
     if (Math.random() > 0.95 && this.fallingObjects.length < 1) {
       this.fallingObjects.push(this.generateFallingObject());
     }
-    //add an obstacle if there is none
+
     if (this.fallingObjects.length) {
-      const [fallingObject] = this.fallingObjects;
+      const [fallingObject] = this.fallingObjects; //get first element of the array = falling object object
       const lives = document.getElementById("lives");
       const score = document.getElementById("score");
 
@@ -122,55 +111,56 @@ export class Game {
       this.handleMissedElement(fallingObject, lives, score);
     }
   }
-  //Remove player, remove fallingObjects, set Game over, show end screen
   endGame() {
     this.player.element.remove();
     this.fallingObjects.forEach((object) => object.element.remove());
     this.isGameOver = true;
     this.gameScreen.style.display = "none";
-    this.endScreen.style.display = "block"; //TODO check if needs to be flex
-  }
-  updateDifficulty() {
-    if (this.score > 50) {
-      this.hardMode = true;
-    }
+    this.endScreen.style.display = "flex";
+    document.getElementById("end-score").innerText = `${this.score}`;
   }
 
-  updateDifficultyInDom() {
+  generateFallingObject() {
+    const object = new FallingObject(this.gameContainer, this.hardMode);
+    return object;
+  }
+
+  updateDifficulty() {
+    if (this.score >= 50) this.hardMode = true;
+
     const displayedDifficulty = document.getElementById("difficulty");
     this.hardMode
       ? (displayedDifficulty.textContent = "Hard")
       : (displayedDifficulty.textContent = "Easy");
   }
+
   handleCollision(fallingObject, lives, score) {
-    //## HANDLING COLLISIONS - TODO: OUTSOURCE TO HELPER FUNCTIONS; FINE TUNE LOGIC
     if (this.player.didCollide(fallingObject)) {
-      //UPDATED COLLISION LOGIC:
+      this.removeFallingObject(fallingObject);
       if (
         fallingObject.type === this.matchingColor ||
         fallingObject.type === "rainbow"
       ) {
+        this.removeFallingObject(fallingObject); // Ensure actions are completed before e.g. the game Ends
         this.score += 10;
         score.textContent = this.score;
-        this.onInitialRender(); //Generate new set of colors
+        this.generateAllColors(); //Generate new set of colors
       } else if (fallingObject.type === "heart") {
+        this.removeFallingObject(fallingObject);
         if (this.lives < 3) {
           this.lives++;
           lives.textContent = this.lives;
         }
       } else if (fallingObject.type === "bomb") {
+        this.removeFallingObject(fallingObject);
         this.endGame();
       } else {
+        this.removeFallingObject(fallingObject);
         this.lives--;
         lives.textContent = this.lives;
       }
-      //REMOVE ELEMENT AFTER COLLISION
-      fallingObject.element.remove();
-      this.fallingObjects = [];
       //END GAME IF NEEDED
-      if (this.lives === 0) {
-        this.endGame();
-      }
+      this.checkIfGameOver();
     }
   }
 
@@ -186,16 +176,19 @@ export class Game {
         this.lives--;
         lives.textContent = this.lives;
       }
-      //remove obstacle
-      fallingObject.element.remove();
-      this.fallingObjects = [];
+      this.removeFallingObject(fallingObject);
+
       //End game if needed
-      if (this.lives === 0) {
-        this.endGame();
-      }
+      this.checkIfGameOver();
+    }
+  }
+  removeFallingObject(fallingObject) {
+    fallingObject.element.remove();
+    this.fallingObjects = [];
+  }
+  checkIfGameOver() {
+    if (this.lives === 0) {
+      this.endGame();
     }
   }
 }
-// localStorage.setItem("my-value", "value");
-// // localStorage.removeItem("my-value");
-// const myValue=localStorage.getItem("my-value")

@@ -15,39 +15,42 @@
     <main>
       <!--Home Screen-->
       <div id="home-screen">
-        <img id="logo" src="src/assets/logo.png" alt="color cather logo" />
+        <img class="logo" src="src/assets/logo.png" alt="color catcher logo" />
         <div class="instruction-container" id="instructions">
           <h2>How to play</h2>
           <p>
-            Catch the falling colors and score points! On top of the screen you
-            see a secondary color (green, orange or purple) that should be
-            mixed. You are being assigned one primary color, and your job is to
-            catch the other primary color needed to mix the secondary color.
-            Example: You are assigned red, the target color is purple - so you
-            have to catch a blue, to score points! Watch out for special
-            elements, as they can either support your winning streak or end the
-            game! If you're doing well, you'll enter hard mode, making it even
-            trickier to catch the right color.
+            Catch the missing primary color needed to mix the target color!
+            <br />
+            Example: Target is purple and you have red? ➔ Catch blue to score
+            points! Wrong catches cost lives, and special items can help or hurt
+            you. Do well to unlock hard mode! 👀
           </p>
           <hr />
           <h2>Objects you can catch:</h2>
           <div id="item-explainer">
             <div class="item-box">
-              🟡 Color<br />
-              Catching the right color will add points, catching the wrong one
-              will cost you a life!
+              <p>
+                🟡 Color<br />
+                Catch the right one to score. Wrong ones cost a life.
+              </p>
             </div>
             <div class="item-box">
-              🌈 Rainbow<br />
-              Catching this will count as if you caught the right color.
+              <p>
+                🌈 Rainbow<br />
+                Counts as the correct color.
+              </p>
             </div>
             <div class="item-box">
-              ♥️ Heart<br />
-              This will refill a life up to a max of 3.
+              <p>
+                ♥️ Heart<br />
+                Restores a life (max 3).
+              </p>
             </div>
             <div class="item-box">
-              💣 Bomb<br />
-              Watch out! If you catch this, the game is over!
+              <p>
+                💣 Bomb<br />
+                Instant game over!
+              </p>
             </div>
           </div>
         </div>
@@ -85,9 +88,15 @@
 
       <!--End Screen-->
       <div id="end-screen">
-        <h2>Game over!</h2>
-        <div id="leaderboard"></div>
-        <button class="btn" id="restart-button">Try again!</button>
+        <img class="logo" src="src/assets/logo.png" alt="color catcher logo" />
+        <h2>Game over! 🥲</h2>
+        <div id="total-score">
+          <p>You achieved a score of <span id="end-score">0</span> points!</p>
+          <br />
+          <p>Can you beat your score next round? 😎</p>
+          <br />
+        </div>
+        <button class="btn" id="restart-button">Play again!</button>
       </div>
     </main>
     <script type="module" src="src/scripts/index.js"></script>
